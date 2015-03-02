@@ -3,7 +3,7 @@
 # Name:			Advanced-ISPCIS.sh
 # By:			Jonathan M. Sloan <jsloan@macksarchive.com>
 # Date:			03-01-2015
-# Purpose:		Install OpenVZ, ISPConfig-3.0.5.4p1, OpenVZ-CP and Templates (32bit & 64bit tested)
+# Purpose:		Install OpenVZ, ISPConfig-3.X, OpenVZ-CP and Templates (32bit & 64bit tested)
 # Version:		2.4.9.8
 # Info:			Customized install available for ISPConfig. (The partial install has not been tested yet!)
 # Software:		APF, BFD, OpenVZ, OpenVZ Web Panel, Roundcube, Munin, Monit, OSSEC, OSSEC Web UI, Authy, DUO Security
