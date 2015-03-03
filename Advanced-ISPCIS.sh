@@ -77,7 +77,7 @@ ossec_wui_url='https://github.com/ossec/ossec-wui/archive/master.zip'
 authy_ssl_url='https://raw.github.com/authy/authy-ssh/master/authy-ssh'
 duo_security_url='https://dl.duosecurity.com/duo_unix-latest.tar.gz'
 automysqlbackup_url='http://sourceforge.net/projects/automysqlbackup/files/AutoMySQLBackup/AutoMySQLBackup%20VER%203.0/automysqlbackup-v3.0_rc6.tar.gz/download'
-roundcubemail_url='http://sourceforge.net/projects/roundcubemail/files/roundcubemail/1.0.4/roundcubemail-1.0.4.tar.gz/download'
+roundcubemail_url='http://sourceforge.net/projects/roundcubemail/files/roundcubemail/1.1.0/roundcubemail-1.1.0-complete.tar.gz/download'
 munin_url='http://sourceforge.net/projects/munin/files/stable/2.0.25/munin-2.0.25.tar.gz/download'
 monit_url='http://mmonit.com/monit/dist/monit-5.11.tar.gz'
 
