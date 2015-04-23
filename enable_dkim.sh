@@ -2,19 +2,19 @@
 #==================================================================================================================================
 # Name:                 enable_dkim.sh
 # By:                   Jonathan M. Sloan <jsloan@macksarchive.com>
-# Date:                 02-28-2015
+# Date:                 04-23-2015
 # Purpose:              Used to enable DKIM and SPF for a domain within ISPConfig
-# Version:              1.4
+# Version:              1.5
 # Info:                 Creates DKIM keys and inserts DKIM/SPF records into the domains DNS zone file via mysql.
 #                       Must use the local DNS Server as a resolver within /etc/resolv.conf (should be first choice for nameserver)
 #==================================================================================================================================
 if [[ $# -eq 0 ]]; then
 
-    echo "Must supply domain name as input" && exit 1
+    echo "Usage: $0 <domain> " && exit 1
 
 fi
 
-get_domaininfo_sqlfile=$(mktemp -p /tmp getdomaininfo.XXXXXX.sql)
+get_domaininfo=$(mktemp -p /tmp getdomaininfo.XXXXXX.sql)
 domaininfo_file=$(mktemp -p /tmp domaininfo.XXXXX)
 id_tmp=$(mktemp -p /tmp id.XXXXX)
 zoneinfo_tmp=$(mktemp -p /tmp zone_data.XXXXX)
@@ -31,12 +31,12 @@ for domain in $dkim_domain; do
 
   fi
 
-cat <<EOF > $get_domaininfo_sqlfile
+cat <<EOF > $get_domaininfo
 USE dbispconfig;
 SELECT * FROM \`dns_rr\` WHERE \`name\` = '$domain.' AND \`type\` = 'A';
 EOF
 
-mysql -u root -p"$mysql_pass" < $get_domaininfo_sqlfile | tail -n1 > $domaininfo_file
+mysql -u root -p"$mysql_pass" < $get_domaininfo | tail -n1 > $domaininfo_file
 
 mysql -u root -p"$mysql_pass" <<EOF | grep -vw "id" > $id_tmp
 USE dbispconfig;
@@ -45,20 +45,20 @@ EOF
 
 last_id=$(cat $id_tmp | head -n1)
 _id=$(( $last_id + 1 ))
-sys_userid=$( cat $domaininfo_file | awk -F"\\t" '{ print $2 }')
-sys_groupid=$( cat $domaininfo_file | awk -F"\\t" '{ print $3 }')
-sys_perm_user=$( cat $domaininfo_file | awk -F"\\t" '{ print $4 }')
-sys_perm_group=$( cat $domaininfo_file | awk -F"\\t" '{ print $5 }')
-sys_perm_other=$( cat $domaininfo_file | awk -F"\\t" '{ print $6 }')
-server_id=$( cat $domaininfo_file | awk -F"\\t" '{ print $7 }')
-zoneid=$( cat $domaininfo_file | awk -F"\\t" '{ print $8 }')
+sys_userid=$(cat $domaininfo_file | awk -F"\\t" '{ print $2 }')
+sys_groupid=$(cat $domaininfo_file | awk -F"\\t" '{ print $3 }')
+sys_perm_user=$(cat $domaininfo_file | awk -F"\\t" '{ print $4 }')
+sys_perm_group=$(cat $domaininfo_file | awk -F"\\t" '{ print $5 }')
+sys_perm_other=$(cat $domaininfo_file | awk -F"\\t" '{ print $6 }')
+server_id=$(cat $domaininfo_file | awk -F"\\t" '{ print $7 }')
+zoneid=$(cat $domaininfo_file | awk -F"\\t" '{ print $8 }')
 _type='TXT'
 ttl='3600'
 active='Y'
-_IP=$( cat $domaininfo_file | awk -F"\\t" '{ print $11 }')
-aux=$( cat $domaininfo_file | awk -F"\\t" '{ print $12 }')
+_IP=$(cat $domaininfo_file | awk -F"\\t" '{ print $11 }')
+aux=$(cat $domaininfo_file | awk -F"\\t" '{ print $12 }')
 stamp='NOW()'
-serial=$( cat $domaininfo_file | awk -F"\\t" '{ print $16 }')
+serial=$(cat $domaininfo_file | awk -F"\\t" '{ print $16 }')
 serial=$(( $serial + 1 ))
 spf_id=$(( $_id + 1 ))
 spf_record_data="\"v=spf1 mx a ptr ip4:$_IP/32 ~all\""
@@ -97,7 +97,7 @@ FLUSH PRIVILEGES;
 EOF
 
 mysql -u root -p"$mysql_pass" < $zoneinfo_tmp
-rm -f $id_tmp $domaininfo_file $zoneinfo_tmp $get_domaininfo_sqlfile $dkim_key_tmp
+rm -f $id_tmp $domaininfo_file $zoneinfo_tmp $get_domaininfo $dkim_key_tmp
 
 done
 
