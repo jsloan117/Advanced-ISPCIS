@@ -483,7 +483,7 @@ fi
 # Changes SELINUX state to disabled
 if [[ ! -f '/etc/selinux/config' ]]; then
 
-    echo "SELINUX=disabled" > /etc/selinux/selinux
+    echo "SELINUX=disabled" > /etc/selinux/config
 
 else
 
