@@ -2,7 +2,7 @@
 #==================================================================================================================================
 # Name:                 enable_dkim.sh
 # By:                   Jonathan M. Sloan <jsloan@macksarchive.com>
-# Date:                 04-23-2015
+# Date:                 07-24-2015
 # Purpose:              Used to enable DKIM and SPF for a domain within ISPConfig
 # Version:              1.5
 # Info:                 Creates DKIM keys and inserts DKIM/SPF records into the domains DNS zone file via mysql.
