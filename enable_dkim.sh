@@ -20,10 +20,10 @@ id_tmp=$(mktemp -p /tmp id.XXXXX)
 zoneinfo_tmp=$(mktemp -p /tmp zone_data.XXXXX)
 dkim_key_tmp=$(mktemp -p /tmp dkim_key.XXXXX)
 mysql_pass=''
-dkim_domain=$@
+dkim_domains=$@
 dkim_path=/var/db/dkim
 
-for domain in $dkim_domain; do
+for domain in $dkim_domains; do
 
   if [[ ! -f /var/named/pri.$domain ]]; then
 
@@ -70,6 +70,7 @@ echo -e "\nDKIM Key generated for $domain"
 
 cat <<EOF >> /etc/amavisd/amavisd.conf
 
+# DKIM-KEY for $domain
 dkim_key('$domain', 'mail', '$dkim_path/$domain.key.pem');
 @dkim_signature_options_bysender_maps = (
   { '.' => { ttl => 21*24*3600, c => 'relaxed/simple' } } );
