@@ -2,9 +2,9 @@
 #=========================================================================
 # Name:                 email_backup.sh
 # By:                   Jonathan M. Sloan <jsloan@macksarchive.com>
-# Date:                 03-01-2015
-# Purpose:              Used to backup all email accounts on the system
-# Version:              1.1
+# Date:                 07-24-2015
+# Purpose:              Used to backup all email accounts in ISPCONFIG 3 DB
+# Version:              1.2
 #=========================================================================
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -15,6 +15,9 @@ tmp_file2=$(mktemp -p /tmp email_backup_started.XXXXXX)
 MAIL_FROM=backups@domain.com
 MAIL_TO=admin@domain.com
 mysql_pass=''
+send_mail='no' # yes or no options
+backuplog=/var/log/emailbackups.log
+tmpwatch -m 30d $backupbase/ # Keeps 30 day of backups by default
 
 if [[ ! -d $maildir_path ]]; then
 
@@ -50,9 +53,21 @@ for emailacct in $(cat $tmp_file); do
 
 done
 
+sendmaillog () {
 mailx -s "Email Backup Completed" -r "$MAIL_FROM" "$MAIL_TO" <<EOF
 $(cat $tmp_file2)
 EOF
+}
+
+if [[ $send_mail = 'yes' ]]; then
+
+  sendmaillog
+
+elif [[ $send_mail = 'no' ]]; then
+
+  cat $tmp_file2 >> $backuplog
+
+fi
 
 rm -f $tmp_file $tmp_file2
 exit 0
