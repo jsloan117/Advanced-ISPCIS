@@ -71,16 +71,16 @@ control_container "$ctid" "destroy"
 set_vz_parameters () {
 local ctid="$1"
 local parameter="$2" # hostname, ipadd, nameserver, onboot, userpasswd
-local data="$3" # Value
+local value="$3" # Value
 
 if [[ "$parameter" = 'name' ]]; then
 
-    vzctl set "$ctid" --name "$data" --save
-    [[ ! -L /etc/vz/names/"$data" ]] && ln -vs ../../../etc/vz/conf/"$ctid".conf /etc/vz/names/"$data"
+    vzctl set "$ctid" --name "$value" --save
+    [[ ! -L /etc/vz/names/"$value" ]] && ln -vs ../../../etc/vz/conf/"$ctid".conf /etc/vz/names/"$value"
 
 else
 
-    vzctl set "$ctid" --"$parameter" "$data" --save
+    vzctl set "$ctid" --"$parameter" "$value" --save
 
 fi
 }
@@ -205,7 +205,7 @@ This script is used to manage openvz containers. You can list, create, delete, a
             $prog -s hostname hostname.domain.com
             $prog --set ipadd 192.168.2.102
             $prog -s nameserver "8.8.8.8"
-            $prog -cc 102 (start|stop|restart|status)
+            $prog -c 102 (start|stop|restart|status)
             $prog --lock 102 {yes|no)
             $prog --suspend 102 (suspend|restore)
             $prog -m 102 192.168.2.102 8822
