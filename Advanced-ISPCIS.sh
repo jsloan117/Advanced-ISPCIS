@@ -1128,9 +1128,9 @@ select choice in APF BFD OSSEC OSSEC-WUI Authy Duo_Security Enable-DKIM Clamscan
 
             Install_Duo_Security ;;
 
-		Enable-DKIM)
+        Enable-DKIM)
 
-			Enable_DKIM ;;
+            Enable_DKIM ;;
 
         Clamscanning_PureFTPd)
 
