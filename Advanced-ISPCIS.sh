@@ -1104,11 +1104,11 @@ select choice in APF BFD OSSEC OSSEC-WUI Authy Duo_Security Enable-DKIM Clamscan
 
     case $choice in
 
-		APF)
+        APF)
 
             Install_APF ;;
 
-		BFD)
+        BFD)
 
             Install_BFD ;;
 
