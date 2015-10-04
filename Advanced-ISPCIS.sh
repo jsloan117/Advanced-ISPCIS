@@ -2,9 +2,9 @@
 #=========================================================================================================================================
 # Name:         Advanced-ISPCIS.sh
 # By:           Jonathan M. Sloan <jsloan@macksarchive.com>
-# Date:         09-29-2015
+# Date:         10-04-2015
 # Purpose:      Install ISPConfig-3.X, OpenVZ, OpenVZ-CP and Templates (32bit & 64bit tested) < - Need to retest
-# Version:      2.5.9
+# Version:      2.6.0
 # Info:         Customized install available for ISPConfig. (The partial install has not been tested yet!) < - Need to test
 # Software:     APF, BFD, OpenVZ, OpenVZ Web Panel, Roundcube, Munin, Monit, OSSEC, OSSEC Web UI, Authy, DUO Security
 #               Horde Webmail, Nagios, PNP4Nagios, Check_MK, Collectd, Awstats-FTP and Mail Statistics. Using MariaDB as MySQL replacement
@@ -71,7 +71,8 @@ openvz_cp='http://ovz-web-panel.googlecode.com/svn/installer/ai.sh'
 apf_url='http://www.rfxn.com/downloads/apf-current.tar.gz'
 bfd_url='http://www.rfxn.com/downloads/bfd-current.tar.gz'
 ossec_url='https://github.com/ossec/ossec-hids/archive/2.8.2.tar.gz'
-ossec_wui_url='https://github.com/ossec/ossec-wui/archive/master.zip'
+ossec_wui_url='http://www.ossec.net/files/ossec-wui-0.8.tar.gz'
+#ossec_wui_url='https://github.com/ossec/ossec-wui/archive/master.zip'
 authy_ssl_url='https://raw.github.com/authy/authy-ssh/master/authy-ssh'
 duo_security_url='https://dl.duosecurity.com/duo_unix-latest.tar.gz'
 automysqlbackup_url='http://sourceforge.net/projects/automysqlbackup/files/AutoMySQLBackup/AutoMySQLBackup%20VER%203.0/automysqlbackup-v3.0_rc6.tar.gz/download'
@@ -82,7 +83,7 @@ nagios_plugins_url='http://www.nagios-plugins.org/download/nagios-plugins-2.1.1.
 pnp4nagios_url='http://sourceforge.net/projects/pnp4nagios/files/PNP-0.6/pnp4nagios-0.6.25.tar.gz/download'
 check_mk_url='https://mathias-kettner.de/download/check_mk-1.2.6p9.tar.gz'
 collectd_url='https://collectd.org/files/collectd-5.5.0.tar.gz'
-#maldetect_url='http://www.rfxn.com/downloads/maldetect-current.tar.gz' # Not in use at the moment
+maldetect_url='http://www.rfxn.com/downloads/maldetect-current.tar.gz'
 
 ##########################
 ### Password Variables ###
@@ -466,6 +467,28 @@ rm -rf /tmp/bfd-*
 echo -e "BFD has been installed and configured to send email alerts. \n"
 }
 
+Install_Maldetect () {
+if [[ -x '/usr/local/sbin/maldet' ]]; then
+
+    echo -e "\nIt appears that maldet has already installed. \n" && exit 10
+
+fi
+
+getfiles ${maldetect_url##*/} $maldetect_url
+extract_tars /tmp/${maldetect_url##*/} /tmp
+
+local maldet_extdir=/tmp/$(ls -l /tmp | awk '{ print $9 }' | grep "^maldetect-[.0-9]" | awk -F'-' '{ printf "%s-%s\n", $1, $2 }')
+
+cd $maldet_extdir
+sh install.sh; echo ""
+
+sed -i "s/^email_alert=\(.*\)/email_alert=\"1\"/g" /usr/local/maldetect/conf.maldet
+sed -i "s/^email_addr=\(.*\)/email_addr=\"root@MY_HOSTNAME\"/g" /usr/local/maldetect/conf.maldet
+
+rm -rf /tmp/maldetect-*
+echo -e "Maldet has been installed and configured to send email alerts. \n"
+}
+
 Install_Virtualization () {
 clear
 Install_Basic_Tools
@@ -702,7 +725,7 @@ Main () {
 clear; cat <<EOF
 What would you like to do? [1-5]
 
-Download_OS_Templates: Choose from 5 different OSes to download for ISPConfig. Imports downloaded OSes into ISPConfig DB to use.
+Download_OS_Templates: Choose from 5 different OSes to download for ISPConfig. Imports downloaded OSes into ISPConfig DB to use
 
 Extras: Extra installers menu
 
@@ -877,9 +900,9 @@ perl /usr/share/awstats/wwwroot/cgi-bin/awstats.pl -config=$C_Domain -output -st
 
 Awstats_FTP_Stats () {
 [[ -f /etc/awstats/awstats.model.conf ]] && cp -p /etc/awstats/awstats.model.conf /etc/awstats/awstats.ftp.conf
-sed -i "s/^LogFile=\(.*\)/LogFile=\"\/var\/log\/pure-ftpd\/pureftpd.log\"/g" /etc/awstats/awstats.ftp.conf
+sed -i "s/^LogFile=\(.*\)/LogFile=\"\/var\/log\/pureftpd\/pureftpd.log\"/g" /etc/awstats/awstats.ftp.conf
 sed -i "s/^LogType=\(.*\)/LogType=F/g" /etc/awstats/awstats.ftp.conf
-sed -i "s/^LogFormat=\(.*\)/LogFormat=\"%host %logname %time1 %method %url %code %bytesd\"/g" /etc/awstats/awstats.ftp.conf
+sed -i "s/^LogFormat=\(.*\)/LogFormat=\"%host - %logname %time1 %method %url %code %bytesd\"/g" /etc/awstats/awstats.ftp.conf
 sed -i "s/^NotPageList=\(.*\)/NotPageList=\"\"/g" /etc/awstats/awstats.ftp.conf
 sed -i "s/^LevelForBrowsersDetection=\(.*\)/LevelForBrowsersDetection=0/g" /etc/awstats/awstats.ftp.conf
 sed -i "s/^LevelForOSDetection=\(.*\)/LevelForOSDetection=0/g" /etc/awstats/awstats.ftp.conf
@@ -1078,11 +1101,13 @@ done
 
 Security_Menu () {
 clear; cat <<EOF
-What would you like to do? [1-9]
+What would you like to do? [1-10]
 
-APF: Installs APF - Advanced Policy Firewall: Used in place of ISPConfig's firewall.
+APF: Installs APF - Advanced Policy Firewall: Used in place of ISPConfig's firewall
 
-BFD: Installs BFD - Brute Force Detection: Monitors services for brute force attempts and uses APF to deny attackers by default.
+BFD: Installs BFD - Brute Force Detection: Monitors services for brute force attempts and uses APF to deny attackers by default
+
+Maldet: Installs Maldet - Linux Malware Detect
 
 OSSEC - Install OSSEC HIDS
 
@@ -1100,7 +1125,7 @@ quit -- Exits
 
 EOF
 
-select choice in APF BFD OSSEC OSSEC-WUI Authy Duo_Security Enable-DKIM Clamscanning_PureFTPd quit; do
+select choice in APF BFD Maldet OSSEC OSSEC-WUI Authy Duo_Security Enable-DKIM Clamscanning_PureFTPd quit; do
 
     case $choice in
 
@@ -1111,6 +1136,10 @@ select choice in APF BFD OSSEC OSSEC-WUI Authy Duo_Security Enable-DKIM Clamscan
         BFD)
 
             Install_BFD ;;
+
+        Maldet)
+
+            Install_Maldetect ;;
 
         OSSEC)
 
@@ -1249,8 +1278,9 @@ if [[ -d /usr/share/ossec-wui ]]; then
 
 fi
 
-getfiles ${ossec_wui_url##*/} $ossec_wui_url
-unzip /tmp/${ossec_wui_url##*/} -d /tmp
+curl -s -o /tmp/${ossec_wui_url##*/} $ossec_wui_url
+extract_tars /tmp/${ossec_wui_url##*/} /tmp
+#unzip /tmp/${ossec_wui_url##*/} -d /tmp
 
 rm -f /tmp/${ossec_wui_url##*/}
 mv /tmp/ossec-wui-* /usr/share/ossec-wui
@@ -1289,7 +1319,6 @@ EOF
 
 ctrl_service httpd stop && ctrl_service httpd start
 
-rm -f /tmp/${ossec_wui_url##*/}
 echo -e "\nThe script should have taken care of everything you needed to be setup. If not read this file => /usr/share/ossec-wui/README \n"
 }
 
@@ -3892,10 +3921,10 @@ echo "pure-uploadscript -B -r /etc/pure-ftpd/virus_check.sh" >> /etc/rc.local
 
 cat <<'EOF' > /etc/pure-ftpd/virus_check.sh
 #!/bin/sh
-cs=$(which clamscan)
-logfile="/var/log/pure-ftpd/ftp_removed.log"
+clamscan=$(which clamscan)
+logfile="/var/log/pureftpd/ftp_removed.log"
 
-$cs -r -l "$logfile" --remove "$1"
+$clamscan -r -l "$logfile" --remove "$1"
 EOF
 
 chmod 755 /etc/pure-ftpd/virus_check.sh
