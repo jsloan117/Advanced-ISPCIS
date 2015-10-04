@@ -72,7 +72,6 @@ apf_url='http://www.rfxn.com/downloads/apf-current.tar.gz'
 bfd_url='http://www.rfxn.com/downloads/bfd-current.tar.gz'
 ossec_url='https://github.com/ossec/ossec-hids/archive/2.8.2.tar.gz'
 ossec_wui_url='http://www.ossec.net/files/ossec-wui-0.8.tar.gz'
-#ossec_wui_url='https://github.com/ossec/ossec-wui/archive/master.zip'
 authy_ssl_url='https://raw.github.com/authy/authy-ssh/master/authy-ssh'
 duo_security_url='https://dl.duosecurity.com/duo_unix-latest.tar.gz'
 automysqlbackup_url='http://sourceforge.net/projects/automysqlbackup/files/AutoMySQLBackup/AutoMySQLBackup%20VER%203.0/automysqlbackup-v3.0_rc6.tar.gz/download'
@@ -305,6 +304,8 @@ ask_install_services
 
 MY_HOSTNAME=$MY_HOST.$MY_DOMAIN
 MY_IP=$(ifconfig $MY_NIC | grep -w inet | cut -d: -f2 | awk '{ print $1 }')
+ispconfigurl=${ispconfig_url%/*}
+ispconfig_file=${ispconfigurl##*/}
 pma_file=${phpmyadmin_url##*/}
 pma_extdir=$(echo $pma_file | sed 's/.tar.gz//g')
 automysql_url=${automysqlbackup_url%/*}
@@ -1250,7 +1251,6 @@ done
 }
 
 Install_OSSEC () {
-#local ossec_dir=$(echo ${ossec_url##*/} | sed "s/.tar.gz$//g")
 if [[ -x /var/ossec/bin/ossec-execd || -x /var/ossec/bin/ossec-monitord || -x /opt/ossec/bin/ossec-execd ]]; then
 
     echo -e "\nIt appears ossec has already been installed on your system. \n" && exit 1
@@ -1280,7 +1280,6 @@ fi
 
 curl -s -o /tmp/${ossec_wui_url##*/} $ossec_wui_url
 extract_tars /tmp/${ossec_wui_url##*/} /tmp
-#unzip /tmp/${ossec_wui_url##*/} -d /tmp
 
 rm -f /tmp/${ossec_wui_url##*/}
 mv /tmp/ossec-wui-* /usr/share/ossec-wui
@@ -2273,7 +2272,6 @@ extract_tars /tmp/$pnp4nagios_file /tmp
 cd /tmp/pnp4nagios*
 ./configure
 make all
-#make install
 make fullinstall
 mv /usr/local/pnp4nagios/etc/rra.cfg-sample /usr/local/pnp4nagios/etc/rra.cfg
 mv /usr/local/nagios/etc/nagios.cfg /usr/local/nagios/etc/nagios.cfg.bck
@@ -4204,7 +4202,6 @@ EOF
 
 Install_phpMyAdmin () {
 getfiles $pma_file $phpmyadmin_url
-
 extract_tars /tmp/$pma_file /tmp
 
 mv /tmp/$pma_extdir /usr/share/phpMyAdmin
@@ -5096,8 +5093,8 @@ ctrl_service httpd restart || (ctrl_service httpd stop && ctrl_service httpd sta
 Install_ISPConfig () {
 clear; echo -e "\nWe are finally, about to download and extract the latest version of the ISPConfig-3-Stable branch. \n"
 
-getfiles ${ispconfig_url##*/} $ispconfig_url
-extract_tars /tmp/${ispconfig_url##*/} /tmp
+getfiles $ispconfig_file $ispconfig_url
+extract_tars /tmp/$ispconfig_file /tmp
 
 cd /tmp/ispconfig3_install/install
 
