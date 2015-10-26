@@ -2,17 +2,17 @@
 #======================================================================================================================================================================================================
 # Name:                 php-instaler.sh
 # By:                   Jonathan M. Sloan <jsloan@macksarchive.com>
-# Date:                 08-29-2015
+# Date:                 10-25-2015
 # Purpose:              Install multiple versions of php both fpm and fcgi supported
 # Version:              1.3
-# This Script will Download 3 additional versions of PHP. The versions are 5.4.44, 5.5.28, 5.6.12. Will setup and install each version of php with php-fpm or php-cgi support
+# This Script will Download 3 additional versions of PHP. The versions are 5.4.45, 5.5.30, 5.6.14. Will setup and install each version of php with php-fpm or php-cgi support
 # Not compiled with PgSQL support, to enable add '--with-pdo-pgsql' and '--with-pgsql' to the compiling php function. This would require you to install Postgres
 #======================================================================================================================================================================================================
 
 status="$?"
 ver='1.3'
 
-declare -a my_php_versions=('5.4.44' '5.5.28' '5.6.12')
+declare -a my_php_versions=('5.4.45' '5.5.30' '5.6.14')
 declare -a my_php_type=('fcgi' 'fpm')
 
 print_usage(){
@@ -73,7 +73,7 @@ echo -e "\nStarting to compile php-$phpversion now. \n\n"
 
 if [[ $phptype = ${my_php_type[1]} ]]; then
 
-  if [[ $phpversion = '5.4.44' ]]; then
+  if [[ $phpversion = ${my_php_versions[0]} ]]; then
 
     ./configure --prefix=/opt/php-$phpversion --with-zlib-dir --with-freetype-dir --enable-mbstring --with-libxml-dir=/usr --enable-soap --enable-calendar --with-curl --with-mcrypt \
 --with-zlib --with-gd --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash \
@@ -131,7 +131,7 @@ create_init_script
 
 elif [[ $phptype = ${my_php_type[0]} ]]; then
 
-  if [[ $phpversion = '5.4.44' ]]; then
+  if [[ $phpversion = ${my_php_versions[0]} ]]; then
 
     ./configure --prefix=/opt/phpfcgi-$phpversion --with-zlib-dir --with-freetype-dir --enable-mbstring --with-libxml-dir=/usr --enable-soap --enable-calendar --with-curl --with-mcrypt \
 --with-zlib --with-gd --disable-rpath --enable-inline-optimization --with-bz2 --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash \
