@@ -5,20 +5,23 @@
 # Date:                 10-25-2015
 # Purpose:              Install multiple versions of php both fpm and fcgi supported
 # Version:              1.3
-# This Script will Download 3 additional versions of PHP. The versions are 5.4.45, 5.5.30, 5.6.14. Will setup and install each version of php with php-fpm or php-cgi support
+# This Script will Download 3 additional versions of PHP. The versions are 5.4.45, 5.5.30, 5.6.15. Will setup and install each version of php with php-fpm or php-cgi support
 # Not compiled with PgSQL support, to enable add '--with-pdo-pgsql' and '--with-pgsql' to the compiling php function. This would require you to install Postgres
 #======================================================================================================================================================================================================
 
 status="$?"
 ver='1.3'
 
-declare -a my_php_versions=('5.4.45' '5.5.30' '5.6.14')
+declare -a my_php_versions=('5.4.45' '5.5.30' '5.6.15')
 declare -a my_php_type=('fcgi' 'fpm')
 
 print_usage(){
 clear; cat<<USAGE
 This script will install 1 of 3 php versions and type at a time
-      Usage: ${0##*/} version: $ver
+
+      Usage: ${0##*/}
+      Version: $ver
+
 USAGE
 }
 
