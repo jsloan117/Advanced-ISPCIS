@@ -1,6 +1,6 @@
 #!/bin/bash
 #======================================================================================================================================================================================================
-# Name:                 php-instaler.sh
+# Name:                 php_instaler.sh
 # By:                   Jonathan M. Sloan <jsloan@macksarchive.com>
 # Date:                 11-12-2015
 # Purpose:              Install multiple versions of php both fpm and fcgi supported
