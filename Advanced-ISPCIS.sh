@@ -1807,6 +1807,7 @@ set daemon  60              # check services at 1-minute intervals
 ## a standalone log file instead, specify the full path to the log file
 #
 # set logfile syslog facility log_daemon
+set logfile /var/log/monit
 #
 #
 ## Set the location of the Monit lock file which stores the process id of the
@@ -1882,7 +1883,7 @@ set mail-format {
 ## or sender using the MAIL-FORMAT statement. Macros such as $DATE, etc.
 ## are expanded at runtime. For example, to override the sender, use:
 #
-set mail-format { from: monit@$MY_DOMAIN }
+set mail-format { from: monit@$MY_HOSTNAME }
 #
 #
 ## You can set alert recipients whom will receive alerts if/when a
