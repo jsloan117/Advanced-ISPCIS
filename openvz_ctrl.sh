@@ -205,9 +205,9 @@ This script is used to manage openvz containers. You can list, create, delete, a
             $prog -s hostname hostname.domain.com
             $prog --set ipadd 192.168.2.102
             $prog -s nameserver "8.8.8.8"
-            $prog -c 102 (start|stop|restart|status)
-            $prog --lock 102 {yes|no)
-            $prog --suspend 102 (suspend|restore)
+            $prog -c 102 [start|stop|restart|status]
+            $prog --lock 102 [yes|no]
+            $prog --suspend 102 [suspend|restore]
             $prog -m 102 192.168.2.102 8822
             $prog --migrate 102 192.168.2.102
             $prog -cs 102
