@@ -4,16 +4,17 @@
 # By:                   Jonathan M. Sloan <jsloan@macksarchive.com>
 # Date:                 01-29-2016
 # Purpose:              Install multiple versions of python
-# Version:              1.1
-# This Script will Download 3 additional versions of Python. The versions are 2.7.11, 3.4.4, 3.5.1
+# Version:              1.2
+# This Script will Download 3 additional versions of Python. The versions are 2.7.15, 3.6.6, 3.7.0
 #==================================================================================================
 # ChangeLog:
 # 1.0 -> 1.1: updated versions, added get_pip function
+# 1.1 -> 1.2: updated versions
 
 status="$?"
 ver='1.1'
 
-declare -a my_python_versions=('2.7.11' '3.4.4' '3.5.1')
+declare -a my_python_versions=('2.7.15' '3.6.6' '3.7.0')
 
 print_usage(){
 clear; cat<<USAGE
